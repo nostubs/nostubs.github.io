@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>Welcome to No Stubs</title>
+  <meta name="description" content="I first learned how to program at App Academy, a three month coding bootcamp. I had an incredible experience there, but we probably spent a day, maybe two, l...">
+
+  <link rel="stylesheet" href="/assets/main.css">
+  <link rel="canonical" href="https://nostubs.com/welcome/testing/personal/2018/01/07/welcome-to-no-stubs.html">
+  <link rel="alternate" type="application/rss+xml" title="No Stubs" href="/feed.xml">
+  
+  
+</head>
+
+
+  <body>
+
+    <header class="site-header" role="banner">
+
+  <div class="wrapper">
+    
+    
+    <a class="site-title" href="/">No Stubs</a>
+  
+    
+      <nav class="site-nav">
+        <input type="checkbox" id="nav-trigger" class="nav-trigger" />
+        <label for="nav-trigger">
+          <span class="menu-icon">
+            <svg viewBox="0 0 18 15" width="18px" height="15px">
+              <path fill="#424242" d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.031C17.335,0,18,0.665,18,1.484L18,1.484z"/>
+              <path fill="#424242" d="M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0c0-0.82,0.665-1.484,1.484-1.484 h15.031C17.335,6.031,18,6.696,18,7.516L18,7.516z"/>
+              <path fill="#424242" d="M18,13.516C18,14.335,17.335,15,16.516,15H1.484C0.665,15,0,14.335,0,13.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.031C17.335,12.031,18,12.696,18,13.516L18,13.516z"/>
+            </svg>
+          </span>
+        </label>
+
+        <div class="trigger">
+          
+            
+            
+            <a class="page-link" href="/submit-a-test/">Submit A Test</a>
+            
+          
+            
+            
+            <a class="page-link" href="/about/">About</a>
+            
+          
+        </div>
+      </nav>
+    
+  </div>
+</header>
+
+
+    <main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+
+  <header class="post-header">
+    <h1 class="post-title" itemprop="name headline">Welcome to No Stubs</h1>
+    <p class="post-meta">
+      <time datetime="2018-01-07T21:00:00-08:00" itemprop="datePublished">
+        
+        Jan 7, 2018
+      </time>
+      
+        • <span itemprop="author" itemscope itemtype="http://schema.org/Person"><span itemprop="name">Sam Sweeney</span></span>
+      </p>
+  </header>
+
+  <div class="post-content" itemprop="articleBody">
+    <p>I first learned how to program at <a href="https://www.appacademy.io/">App Academy</a>, a three month coding bootcamp.  I had an incredible experience there, but we probably spent a day, maybe two, learning about testing.  As a result, the <code class="highlighter-rouge">spec</code> <a href="https://github.com/shubik22/BetterNote/tree/master/spec">directory</a> of my final project, a Rails/Backbone clone of Evernote, is full of files like <a href="https://github.com/shubik22/BetterNote/blob/master/spec/controllers/notes_controller_spec.rb">this</a>:</p>
+
+<figure class="highlight"><pre><code class="language-ruby" data-lang="ruby"><span class="nb">require</span> <span class="s1">'spec_helper'</span><br data-jekyll-commonmark-ghpages="" /><br data-jekyll-commonmark-ghpages="" /><span class="n">describe</span> <span class="no">NotesController</span> <span class="k">do</span><br data-jekyll-commonmark-ghpages="" /><span class="k">end</span></code></pre></figure>
+
+<p>Sad!  Of all the things that I learned at App Academy, the value of testing was not among them.  That’s why I feel so lucky to have ended up at <a href="https://www.wealthfront.com/">Wealthfront</a>, an online financial advisor, as my first job as a software engineer.</p>
+
+<p>Wealthfront loves testing.  And, starting at Wealtfront as more or less a blank canvas, I learned to love testing too.  I don’t consider myself a testing ideologue today and hopefully come Monday you won’t find me at work lecturing my coworkers about the purity of their unit tests.  But tests are the first thing I think about whenever I’m starting on almost any software engineering task these days and I consider what I learned about testing at Wealthfront to have been the most valuable part of my education as a software engineer to this day.</p>
+
+<p>At App Academy, to the extent that we thought about testing at all, we thought of it as a chore, something with minimal value that you did before you get back to building, creating, doing the stuff that made you want to write code in the first place.  Maybe that’s true when your ultimate goal is to throw together an app by yourself in two weeks and the move on.</p>
+
+<p>But at Wealthfront, I first confronted one of the central problems of software development.  Writing code, modifying code, maintaining code, collaborating on code are difficult, error-prone, unpredictable endeavors.  And yet, you need to produce reliable, stable, maintainable software.  How?</p>
+
+<p>Wealthfront’s answer was automated testing:</p>
+
+<ul>
+  <li>Nearly any change to the codebase, even a seemingly trivial one, was expected to have test coverage.</li>
+  <li>If you wanted to enforce a practice throughout the codebase, getting the team to agree with you wasn’t enough – you also needed to find a way to enforce the practice in an automated way.</li>
+  <li>Deployment was as simple as clicking a button in the aptly named Deployment Manager, which would kick off a series of tests and, if they passed, make your changes live.  Engineers were allowed to deploy more or less <a href="https://www.wealthfront.com/engineering">at will</a>.</li>
+  <li>Code comments were frowned upon; there’s no way to reliably ensure they stay in sync with the code, and anyways your code is already documented – by your tests.</li>
+  <li>Manual QA was non-existent, having been offloaded to a <a href="https://github.com/teamcapybara/capybara">lovable rodent</a>.</li>
+</ul>
+
+<p>For the most part, the system worked.  Only after I left Wealthfront did I learn what a “code freeze” was, or experience the tedium of manually tapping through an app to verify the latest release whenever I was on call, or have to explain (twice!) to a senior engineer why merging changes that broke the build wasn’t ok, no matter how urgently he needed to ship his feature.</p>
+
+<p>Of course, it wasn’t perfect.  All testing strategies have flaws, which will inevitably become painfully apparent at the most inopportune time.  And for every 10 comments on a PR that just read “test?” that made me write a useful test, there’d be one that would lead me to write a test that was about as valuable as the one at the top of this post.</p>
+
+<p>But today, I think of testing as a core part of any software development I do.  Testing philosophy and culture is near the top of my list of criteria for companies I consider working at.  During my last job search, the top of my resume read “Writing code for my tests, and not the other way around,” a joke I stole from I’m not sure where that wasn’t really a joke.</p>
+
+<p>Which leads to me starting this blog.  As important as testing is to successful software development, it’s also really complicated and tough to do well.  So there’s a lot to say about it, I think.</p>
+
+<p>My goal with this blog is to write about all things testing-related: stories from places I’ve worked, libraries I like, patterns that I think are interesting, and ideas that I think are worth talking about.  I doubt all, or even much, of it will be new or revolutionary but I’m sure the act of writing it will be fun for me, and hopefully reading it will be fun for some of you too.</p>
+
+  </div>
+
+  
+</article>
+
+      </div>
+    </main>
+
+    <footer class="site-footer">
+
+  <div class="wrapper">
+
+    <h2 class="footer-heading">No Stubs</h2>
+
+    <div class="footer-col-wrapper">
+      <div class="footer-col footer-col-1">
+        <ul class="contact-list">
+          <li>
+            
+              No Stubs
+            
+            </li>
+            
+            <li><a href="mailto:nostubsblog@gmail.com">nostubsblog@gmail.com</a></li>
+            
+        </ul>
+      </div>
+
+      <div class="footer-col footer-col-2">
+        <ul class="social-media-list">
+          
+
+          
+        </ul>
+      </div>
+
+      <div class="footer-col footer-col-3">
+        <p>A Blog About Testing</p>
+      </div>
+    </div>
+
+  </div>
+
+</footer>
+
+
+  </body>
+
+</html>
