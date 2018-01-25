@@ -1,7 +1,7 @@
 ---
 layout: post
 title:  "Integration Testing Done Right"
-date:   2018-01-15 12:00:00 -0800
+date:   2018-01-25 12:00:00 -0800
 categories: integration testing
 author: Sam Sweeney
 ---
@@ -80,7 +80,15 @@ class SessionsClient {
 
 So how do we test this service?
 
-[Note: in the upcoming examples, we use [`tape`](https://github.com/substack/tape), a fabulous Javascript testing library.  Tape tests give you an `assert` object you can use to make assertions about your code.  A test is completed once `assert.end` is called.]
+First, it's probably worth asking ourselves what we're trying to test with our integration tests.  I'd assert that we have a few goals here.  We want to write end-to-end tests that:
+
+1.  Run a version of our service that's as close as possible to the version we run in production.
+2.  Run in an environment that's as close as possible to our production environment.
+3.  Cover a variety of inputs/failure scenarios.
+
+With that in mind, let's check out some possible approaches to testing it.
+
+[Note: in the upcoming examples, we use [`tape`](https://github.com/substack/tape), a great, simple Javascript testing library.  Tape tests give you an `assert` object you can use to make assertions about your code.  A test is completed once `assert.end` is called.]
 
 ## Option 1: Mock O'Clock
 
@@ -156,7 +164,17 @@ test('teardown', testOpts, function t(assert) {
 });
 {% endhighlight %}
 
-What's wrong with this test?  Well, for starters, it mocks out an entire class.  We have no guarantee that our mock client actually behaves like our real client.  Sure, we can (and probably should) test the real class separately with a unit test, but the point of the tests we're writing is to cover the end-to-end functionality of `Middleman`.  Back to the drawing board.  
+So how do we feel about this test?
+
+### The Good
+
+Well, it's pretty easy to set up!  And it should be reliable.  Because of its simplicity (and the fact that it's not making any network requests), there aren't really any obvious sources of flakiness or non-determinism.  We're creating a mock client, but we're still testing the functionality of our app and we can write separate unit tests for the client.
+
+### The Bad
+
+What's wrong with this test?  Well, for starters, it mocks out an entire class, violating our first goal for these tests.  We have no guarantee that our mock client actually behaves like our real client.  (I'd like this test more if we were using, say, TypeScript, or some other strongly typed language, which would allow us to create a stricter mock.)
+
+Still, the point of the tests we're writing is to cover the end-to-end functionality of production `Middleman`.  This test falls short in that regard.  Back to the drawing board.
 
 ## Option 2: Nock O'Clock
 
@@ -214,15 +232,19 @@ test('teardown', testOpts, function t(assert) {
 });
 {% endhighlight %}
 
-Better!  Our service is running in our test just the way it would in production.  It's almost too good to be true.  And, actually, it kind of is.
+Nice!
 
-The issue is how `nock` works: by overriding the `request` and `clientRequest` functionality in Node's core `http` library (see [here](https://github.com/node-nock/nock/blob/master/lib/common.js#L103)).  In a lot of ways, `nock` is everything we want: it lets us neatly intercept outgoing requests from our app and test how it handles various responses.
+### The Good
 
-On the other hand, we're breaking a central rule of testing: don't mess around with the internals of your environment if you don't have to, especially when it's going to deviate from your production environment.  Just like we wouldn't run the test suite of a Ruby 2.1.x app in an environment that's running 2.3.x, we should try to avoid monkeypatching a part of Node.JS's core library.
+In a lot of ways, `nock` is perfect for our use case: it lets us neatly intercept outgoing requests from our app and test how it handles various responses.  We're also not mocking out any internals of our service -- it seems to be running in our test just the way it would in production.  `nock` also has a lot of powerful features (response delays, socket timeouts, request header/body assertions) that allow you to simulate a variety of situations.
 
-Why?  Mainly because we have no way to guarantee that `nock's` implementation of `http.request` is the same as what it's overriding.  (Which is not a shot against `nock`, an elegantly written library that's served me well many times.)  But even if `nock` is 99% identical to the core `http` library, that 1% will lurk in the background, ready to rear its head when you least expect it.
+### The Bad
 
-Writing good tests is often about limiting their seams -- their blind spots, the minor differences between how your code runs in your tests and how it runs in production.  If we can avoid introducing a seam here, we should.
+The issue is how `nock` works: by overriding the `request` and `clientRequest` functionality in Node's core `http` library (see [here](https://github.com/node-nock/nock/blob/master/lib/common.js#L103)).
+
+We're breaking a central rule of testing (see goal #2): don't mess around with the internals of your environment if you don't have to.  Just like we wouldn't run the test suite of a Ruby 2.1.x app in an environment that's running 2.3.x, we should try to avoid monkeypatching a part of Node.JS's core library.
+
+Why?  We have no way to guarantee that `nock's` implementation of `http.request` is the same as what it's overriding.  Writing good tests is often about limiting their seams -- their blind spots, the minor differences between how your code runs in your tests and how it runs in production.  If we can avoid introducing a seam here, we should.
 
 ## Option 3: Yo Dawg, I Heard You Liked Services
 
@@ -334,7 +356,15 @@ test('teardown', testOpts, function t(assert) {
 });
 {% endhighlight %}
 
-Pretty good!  The downside to this approach is that we're making actual HTTP requests, which can introduce instability to our tests simply because making network requests can be an unreliable endeavor at times.  But our tests now come just about as close to actual production behavior as we're going to get without actually making requests from our test environment to the production Sessions Service.  (And if you do that, you're going to have a bad time.)
+### The Good
+
+At last, we're running our service without any modifications and without monkeying around with its environment.  Out of all three approaches here, I'd argue this one gives us the most confidence that our code is going to work as expected when we hit the big red deploy button.
+
+### The Bad
+
+The main downside to this approach is that we're making actual HTTP requests, which can introduce instability to our tests simply because making network requests can be an unreliable endeavor at times.  But our tests now come just about as close to actual production behavior as we're going to get without actually spinning up an instance of the Sessions Service to use in our tests.
+
+Why shouldn't we do that?  It depends on the situation, but in general we want to avoid `Middleman's` integration tests from directly depending on other services.  The benefit of starting an instance of every service that `Middleman` communicates with to run its test suite would likely be vastly outweighed by the cost in terms of test complexity, maintenance, test time and computing resource.
 
 ## Conclusion
 
